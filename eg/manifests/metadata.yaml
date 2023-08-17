@@ -1,5 +1,5 @@
-name: ""
-description: ""
+name: "test"
+description: "second test"
 tags:
     vehicule: neutron
     application: muon
