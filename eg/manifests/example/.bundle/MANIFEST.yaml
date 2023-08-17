@@ -1,0 +1,8 @@
+name: manifest-eg
+version: v1.0.0
+metadata: 
+    name: ""
+    description: "" 
+    tags:
+        vehicule: neutron
+        application: muon
