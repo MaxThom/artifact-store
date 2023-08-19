@@ -17,3 +17,18 @@ entries:
         - hello.txt
         - world.txt
         - aurevoir.txt
+  tmtc:
+    - version: v1.0.0
+      name: tmtc
+      metadata:
+        name: "test"
+        description: "second test"
+        tags:
+          vehicule: neutron
+          application: muon
+      url: ./tmtc_v1.0.0.tgz
+      files:
+        - .bundle/
+        - .bundle/MANIFEST.yaml
+        - .bundle/sha1sums.txt
+        - tmtc.bfbs

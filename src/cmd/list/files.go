@@ -28,7 +28,6 @@ func init() {
 var filesCmd = &cobra.Command{
 	Use:   "files",
 	Short: "List files in a bundle",
-	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		var b bytes.Buffer
 		e := yaml.NewEncoder(&b)
@@ -40,7 +39,9 @@ var filesCmd = &cobra.Command{
 				if s, ok := services.ListFiles(args[0], args[1], withBundle); ok {
 					if s, ok := services.ListFileContent(args[0], args[1], s...); ok {
 						for k, v := range s {
-							fmt.Println("--- " + k + " ------------")
+							if len(s) > 1 {
+								fmt.Println("--- " + k + " ------------")
+							}
 							fmt.Println(string(v))
 						}
 					} else {
@@ -50,7 +51,9 @@ var filesCmd = &cobra.Command{
 				}
 			} else if s, ok := services.ListFileContent(args[0], args[1], args[2:]...); ok {
 				for k, v := range s {
-					fmt.Println("--- " + k + " ------------")
+					if len(s) > 1 {
+						fmt.Println("--- " + k + " ------------")
+					}
 					fmt.Println(string(v))
 				}
 			} else {
@@ -64,7 +67,17 @@ var filesCmd = &cobra.Command{
 			} else {
 				fmt.Println("no such bundle")
 			}
-
+		} else if len(args) == 1 {
+			s := services.ListBundles(args[0], "")
+			for _, b := range s {
+				fmt.Println("- " + b.Name + "/" + b.Version)
+			}
+		} else if len(args) == 0 {
+			s := services.ListStore()
+			for k, _ := range s {
+				fmt.Println("- " + k)
+			}
 		}
+
 	},
 }

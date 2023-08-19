@@ -54,18 +54,17 @@ func InitializeStore() error {
 	}
 
 	if err = yaml.Unmarshal(data, &store); err != nil || store == nil {
-		fmt.Println(err)
 		store = &Store{
 			APIVersion: "v1alpha",
 			Entries:    make(map[string][]StoredBundle),
 		}
 		writeStore()
+		fmt.Println(fmt.Sprintf("New store up & running at '%s'\n", storePath))
 	}
 	if store.Entries == nil {
 		store.Entries = make(map[string][]StoredBundle)
 	}
 
-	fmt.Println(fmt.Sprintf("Store up & running at '%s'\n", storePath))
 	return nil
 }
 
