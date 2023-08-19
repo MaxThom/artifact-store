@@ -1,45 +1,19 @@
 apiVersion: v1alpha
 entries:
-  tmtc:
-    - version: v1.0.0
-      name: tmtc
+  text:
+    - version: v0.0.1
+      name: text
       metadata:
         name: "test"
         description: "second test"
         tags:
           vehicule: neutron
           application: muon
-      url: tmtc_v1.0.0.tgz
+      url: ./text_v0.0.1.tgz
       files:
         - .bundle/
         - .bundle/MANIFEST.yaml
         - .bundle/sha1sums.txt
-        - tmtc.bfbs
-    - version: v1.0.0
-      name: tmtc
-      metadata:
-        name: "test"
-        description: "second test"
-        tags:
-          vehicule: neutron
-          application: muon
-      url: tmtc_v1.0.0.tgz
-      files:
-        - .bundle/
-        - .bundle/MANIFEST.yaml
-        - .bundle/sha1sums.txt
-        - tmtc.bfbs
-    - version: v1.0.0
-      name: tmtc
-      metadata:
-        name: "test"
-        description: "second test"
-        tags:
-          vehicule: neutron
-          application: muon
-      url: tmtc_v1.0.0.tgz
-      files:
-        - .bundle/
-        - .bundle/MANIFEST.yaml
-        - .bundle/sha1sums.txt
-        - tmtc.bfbs
+        - hello.txt
+        - world.txt
+        - aurevoir.txt
