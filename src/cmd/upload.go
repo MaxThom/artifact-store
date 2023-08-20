@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/maxthom/artifact-store/services"
+	"github.com/maxthom/artifact-store/store"
 	"github.com/spf13/cobra"
 )
 
@@ -17,12 +17,12 @@ func init() {
 var uploadCmd = &cobra.Command{
 	Use:   "upload",
 	Short: "Upload bundle to server",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		services.InitializeStore()
+		store.InitializeStore()
 
-		services.UploadBundle(args[0], path)
+		store.UploadBundle(args[1], args[0], path)
 
 	},
 }

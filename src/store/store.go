@@ -1,4 +1,4 @@
-package services
+package store
 
 import (
 	"archive/tar"
@@ -70,7 +70,7 @@ func InitializeStore() error {
 
 // filePath: relative|absolute path to file on disk to pull from. TODO: support s3
 // inStorePath: relative to the store
-func UploadBundle(filePath string, inStorePath string) {
+func UploadBundle(filePath string, bucket string, inStorePath string) {
 	// Get uploaded file
 	fs, err := os.Stat(filePath)
 	if err != nil {
@@ -96,13 +96,13 @@ func UploadBundle(filePath string, inStorePath string) {
 	}
 
 	// Update index
-	n, b := readManifest(p, path.Join(inStorePath, fs.Name()))
+	_, b := readManifest(p, path.Join(inStorePath, fs.Name()))
 
-	if _, ok := store.Entries[n]; !ok {
-		store.Entries[n] = []StoredBundle{}
+	if _, ok := store.Entries[bucket]; !ok {
+		store.Entries[bucket] = []StoredBundle{}
 	}
 
-	store.Entries[n] = append(store.Entries[n], b)
+	store.Entries[bucket] = append(store.Entries[bucket], b)
 	writeStore()
 }
 

@@ -1,6 +1,36 @@
 apiVersion: v1alpha
 entries:
-  text:
+  manifests:
+    - version: v1.0.0
+      name: tmtc
+      metadata:
+        name: "test"
+        description: "second test"
+        tags:
+          vehicule: neutron
+          application: muon
+      url: ./tmtc_v1.0.0.tgz
+      files:
+        - .bundle/
+        - .bundle/MANIFEST.yaml
+        - .bundle/sha1sums.txt
+        - tmtc.bfbs
+  pizzahut:
+    - version: v1.0.0
+      name: default
+      metadata:
+        name: "general_store"
+        description: "configuration for defacto store"
+        tags:
+          general: true
+          store: pizza
+      url: ./default_v1.0.0.tgz
+      files:
+        - .bundle/
+        - .bundle/MANIFEST.yaml
+        - .bundle/sha1sums.txt
+        - pizzahut.yaml
+  txt:
     - version: v0.0.1
       name: text
       metadata:
@@ -17,18 +47,3 @@ entries:
         - hello.txt
         - world.txt
         - aurevoir.txt
-  tmtc:
-    - version: v1.0.0
-      name: tmtc
-      metadata:
-        name: "test"
-        description: "second test"
-        tags:
-          vehicule: neutron
-          application: muon
-      url: ./tmtc_v1.0.0.tgz
-      files:
-        - .bundle/
-        - .bundle/MANIFEST.yaml
-        - .bundle/sha1sums.txt
-        - tmtc.bfbs

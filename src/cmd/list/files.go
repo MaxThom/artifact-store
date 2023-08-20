@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/maxthom/artifact-store/services"
+	"github.com/maxthom/artifact-store/store"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -33,11 +33,11 @@ var filesCmd = &cobra.Command{
 		e := yaml.NewEncoder(&b)
 		e.SetIndent(2)
 
-		services.InitializeStore()
+		store.InitializeStore()
 		if len(args) > 2 {
 			if args[2] == "." {
-				if s, ok := services.ListFiles(args[0], args[1], withBundle); ok {
-					if s, ok := services.ListFileContent(args[0], args[1], s...); ok {
+				if s, ok := store.ListFiles(args[0], args[1], withBundle); ok {
+					if s, ok := store.ListFileContent(args[0], args[1], s...); ok {
 						for k, v := range s {
 							if len(s) > 1 {
 								fmt.Println("--- " + k + " ------------")
@@ -49,7 +49,7 @@ var filesCmd = &cobra.Command{
 					}
 
 				}
-			} else if s, ok := services.ListFileContent(args[0], args[1], args[2:]...); ok {
+			} else if s, ok := store.ListFileContent(args[0], args[1], args[2:]...); ok {
 				for k, v := range s {
 					if len(s) > 1 {
 						fmt.Println("--- " + k + " ------------")
@@ -61,19 +61,19 @@ var filesCmd = &cobra.Command{
 			}
 
 		} else if len(args) == 2 {
-			if s, ok := services.ListFiles(args[0], args[1], withBundle); ok {
+			if s, ok := store.ListFiles(args[0], args[1], withBundle); ok {
 				e.Encode(&s)
 				fmt.Println(b.String())
 			} else {
 				fmt.Println("no such bundle")
 			}
 		} else if len(args) == 1 {
-			s := services.ListBundles(args[0], "")
+			s := store.ListBundles(args[0], "")
 			for _, b := range s {
 				fmt.Println("- " + b.Name + "/" + b.Version)
 			}
 		} else if len(args) == 0 {
-			s := services.ListStore()
+			s := store.ListStore()
 			for k, _ := range s {
 				fmt.Println("- " + k)
 			}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/maxthom/artifact-store/services"
+	"github.com/maxthom/artifact-store/store"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -24,15 +24,15 @@ var bundleCmd = &cobra.Command{
 		e := yaml.NewEncoder(&b)
 		e.SetIndent(2)
 
-		services.InitializeStore()
+		store.InitializeStore()
 		if len(args) == 0 {
-			s := services.ListStore()
+			s := store.ListStore()
 			e.Encode(&s)
 		} else if len(args) == 1 {
-			s := services.ListBundles(args[0], "")
+			s := store.ListBundles(args[0], "")
 			e.Encode(&s)
 		} else if len(args) == 2 {
-			s := services.ListBundles(args[0], args[1])
+			s := store.ListBundles(args[0], args[1])
 			e.Encode(&s)
 		}
 		fmt.Println(b.String())

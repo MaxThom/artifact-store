@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/maxthom/artifact-store/cmd/list"
+	"github.com/maxthom/artifact-store/cmd/pizzahut"
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +16,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(list.ListCmd)
+	rootCmd.AddCommand(pizzahut.PizzahutCmd)
 }
 
 func Execute() {

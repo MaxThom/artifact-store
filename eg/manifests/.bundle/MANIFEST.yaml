@@ -1,8 +1,8 @@
-name: text
-version: v0.0.1
+name: default
+version: v1.0.0
 metadata: 
-    name: "test"
-    description: "second test"
+    name: "general_store"
+    description: "configuration for defacto store"
     tags:
-        vehicule: neutron
-        application: muon
+        general: true
+        store: pizza

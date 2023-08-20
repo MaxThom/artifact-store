@@ -1,0 +1,5 @@
+name: "general_store"
+description: "configuration for defacto store"
+tags:
+    general: true
+    store: pizza

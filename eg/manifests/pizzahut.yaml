@@ -1,0 +1,14 @@
+address: "123 Main St"
+city: "Anytown"
+employees:
+    managers: 2
+    drivers: 5
+    cooks: 3
+    counter: 7
+menu:
+- name: "Pepperoni"
+  price: 10.99
+- name: "Cheese"
+  price: 5.2
+- name: "Veggie"
+  price: 8.99
