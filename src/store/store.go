@@ -9,8 +9,6 @@ import (
 	"log"
 	"os"
 	"path"
-	"slices"
-	"sort"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -40,6 +38,10 @@ const (
 )
 
 var store *Store
+
+func init() {
+	InitializeStore()
+}
 
 func InitializeStore() error {
 	// Open or create file
@@ -110,13 +112,14 @@ func ListStore() map[string][]StoredBundle {
 	return store.Entries
 }
 
-func ListBundles(bundle, version string) []StoredBundle {
+func ListBundles(bundle, name, version string) []StoredBundle {
+	// TODO: refine search
 	if v, isOk := store.Entries[bundle]; isOk {
-		if version == "" {
+		if version == "" || name == "" {
 			return v
 		} else {
 			for _, b := range v {
-				if b.Version == version {
+				if b.Version == version && b.Name == name {
 					return []StoredBundle{b}
 				}
 			}
@@ -125,10 +128,10 @@ func ListBundles(bundle, version string) []StoredBundle {
 	return []StoredBundle{}
 }
 
-func ListFiles(bundle, version string, withBundle bool) ([]string, bool) {
+func ListFiles(bundle, name, version string, withBundle bool) ([]string, bool) {
 	if v, isOk := store.Entries[bundle]; isOk {
 		for _, b := range v {
-			if b.Version == version {
+			if b.Name == name && b.Version == version {
 				if !withBundle {
 					l := []string{}
 					for _, f := range b.Files {
@@ -147,15 +150,40 @@ func ListFiles(bundle, version string, withBundle bool) ([]string, bool) {
 }
 
 // TODO: generic
-func ListFileContent(bundle, version string, files ...string) (map[string][]byte, bool) {
+func ListFileContent(bundle, name, version string, files ...string) (map[string][]byte, bool) {
 	if v, isOk := store.Entries[bundle]; isOk {
 		for _, b := range v {
-			if b.Version == version {
+			if b.Name == name && b.Version == version {
 				tarPath := path.Join(STORE_ROOTH_PATH, b.Url)
 				return readFiles(tarPath, files), true
 			}
 		}
+	}
+	return nil, false
+}
 
+func ListFileContentToType[T any](bundle, name, version string, files ...string) (map[string][]T, bool) {
+	if v, isOk := store.Entries[bundle]; isOk {
+		r := make(map[string][]T)
+		f := make(map[string][]byte)
+
+		for _, b := range v {
+			if b.Name == name && b.Version == version {
+				tarPath := path.Join(STORE_ROOTH_PATH, b.Url)
+				f = readFiles(tarPath, files)
+				break
+			}
+		}
+
+		for k, v := range f {
+			var t T
+			if err := yaml.Unmarshal(v, &t); err != nil {
+				panic(err)
+			}
+			r[k] = []T{t}
+		}
+
+		return r, true
 	}
 	return nil, false
 }
@@ -181,7 +209,7 @@ func readManifest(tarPath string, storePath string) (string, StoredBundle) {
 // tarPath: path to tar.gz file
 // filesPath: relative paths to files in tar.gz
 func readFiles(tarPath string, filesPath []string) map[string][]byte {
-	slices.Sort(filesPath)
+	//slices.Sort(filesPath)
 	fileContents := make(map[string][]byte)
 
 	// Open the tar ball for reading
@@ -215,15 +243,26 @@ func readFiles(tarPath string, filesPath []string) map[string][]byte {
 		}
 
 		// Check if the current file matches the desired file name
-		i := sort.SearchStrings(filesPath, header.Name)
-		if i < len(filesPath) && filesPath[i] == header.Name {
-			// Read the contents of the file
-			var b bytes.Buffer
-			if _, err := io.Copy(&b, tarReader); err != nil {
-				panic(err)
+		//i := sort.SearchStrings(filesPath, header.Name)
+		for _, v := range filesPath {
+			if v == header.Name {
+				// Read the contents of the file
+				var b bytes.Buffer
+				if _, err := io.Copy(&b, tarReader); err != nil {
+					panic(err)
+				}
+				fileContents[header.Name] = b.Bytes()
+				continue
 			}
-			fileContents[header.Name] = b.Bytes()
 		}
+		//if i < len(filesPath) && filesPath[i] == header.Name {
+		// Read the contents of the file
+		//var b bytes.Buffer
+		//if _, err := io.Copy(&b, tarReader); err != nil {
+		//	panic(err)
+		//}
+		//fileContents[header.Name] = b.Bytes()
+		//}
 
 	}
 

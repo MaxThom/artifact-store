@@ -18,21 +18,23 @@ func init() {
 var bundleCmd = &cobra.Command{
 	Use:   "bundles",
 	Short: "List bundles in store",
-	Args:  cobra.MaximumNArgs(2),
+	Args:  cobra.MaximumNArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
 		var b bytes.Buffer
 		e := yaml.NewEncoder(&b)
 		e.SetIndent(2)
 
-		store.InitializeStore()
 		if len(args) == 0 {
 			s := store.ListStore()
 			e.Encode(&s)
 		} else if len(args) == 1 {
-			s := store.ListBundles(args[0], "")
+			s := store.ListBundles(args[0], "", "")
 			e.Encode(&s)
 		} else if len(args) == 2 {
-			s := store.ListBundles(args[0], args[1])
+			s := store.ListBundles(args[0], args[1], "")
+			e.Encode(&s)
+		} else if len(args) == 3 {
+			s := store.ListBundles(args[0], args[1], args[2])
 			e.Encode(&s)
 		}
 		fmt.Println(b.String())

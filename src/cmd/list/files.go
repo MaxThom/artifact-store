@@ -15,7 +15,7 @@ var (
 
 func init() {
 	filesCmd.SetUsageFunc(func(c *cobra.Command) error {
-		fmt.Print("Usage: artifact-store list files <bundle> <version> <file> [flags]\n\n")
+		fmt.Print("Usage: artifact-store list files <bundle> <name> <version> <file1> <file2> <...> [flags]\n\n")
 		fmt.Print("Flags:\n")
 		fmt.Print("  -h, --help      help for files\n")
 		fmt.Print("  --with-bundle   include bundle files in output\n")
@@ -33,15 +33,12 @@ var filesCmd = &cobra.Command{
 		e := yaml.NewEncoder(&b)
 		e.SetIndent(2)
 
-		store.InitializeStore()
-		if len(args) > 2 {
-			if args[2] == "." {
-				if s, ok := store.ListFiles(args[0], args[1], withBundle); ok {
-					if s, ok := store.ListFileContent(args[0], args[1], s...); ok {
+		if len(args) > 3 {
+			if args[3] == "." {
+				if s, ok := store.ListFiles(args[0], args[1], args[2], withBundle); ok {
+					if s, ok := store.ListFileContent(args[0], args[1], args[2], s...); ok {
 						for k, v := range s {
-							if len(s) > 1 {
-								fmt.Println("--- " + k + " ------------")
-							}
+							fmt.Println("--- " + k + " ------------")
 							fmt.Println(string(v))
 						}
 					} else {
@@ -49,7 +46,7 @@ var filesCmd = &cobra.Command{
 					}
 
 				}
-			} else if s, ok := store.ListFileContent(args[0], args[1], args[2:]...); ok {
+			} else if s, ok := store.ListFileContent(args[0], args[1], args[2], args[3:]...); ok {
 				for k, v := range s {
 					if len(s) > 1 {
 						fmt.Println("--- " + k + " ------------")
@@ -60,15 +57,20 @@ var filesCmd = &cobra.Command{
 				fmt.Println("no such bundle")
 			}
 
-		} else if len(args) == 2 {
-			if s, ok := store.ListFiles(args[0], args[1], withBundle); ok {
+		} else if len(args) == 3 {
+			if s, ok := store.ListFiles(args[0], args[1], args[2], withBundle); ok {
 				e.Encode(&s)
 				fmt.Println(b.String())
 			} else {
 				fmt.Println("no such bundle")
 			}
+		} else if len(args) == 2 {
+			s := store.ListBundles(args[0], args[1], "")
+			for _, b := range s {
+				fmt.Println("- " + b.Name + "/" + b.Version)
+			}
 		} else if len(args) == 1 {
-			s := store.ListBundles(args[0], "")
+			s := store.ListBundles(args[0], "", "")
 			for _, b := range s {
 				fmt.Println("- " + b.Name + "/" + b.Version)
 			}

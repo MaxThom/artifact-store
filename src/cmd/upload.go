@@ -20,8 +20,6 @@ var uploadCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		store.InitializeStore()
-
 		store.UploadBundle(args[1], args[0], path)
 
 	},
