@@ -182,7 +182,7 @@ What changes
 
 ### Inside the MANIFEST.yaml
 
-- No arbritraty metadata
+- No arbritrary metadata
 
 ```yaml
 name: ""         // name of the bundle
@@ -218,7 +218,7 @@ entries:
 
 ### To bundle
 
-to bunle, we remove the metadata file arg
+to bundle, we remove the metadata file arg
 
 ```bash
 store bundle <name> <version> -- <files>
@@ -239,6 +239,8 @@ bundle_x/
 ├─ file_3.txt
 ├─ ...
 ```
+
+### Pros/Cons
 
 - Technically, this options is less tied up by lot of typing and more freedom, but it's then more difficult to have search queries and understand what its your store so you can manipulate it.
 - Moreover, the speed of reading one file is faster then reading a lake of bundle.
